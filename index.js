@@ -11,6 +11,7 @@ const throwError = (res, code) => {
 }
 
 const listener = (req, res) => {
+    console.info(`Request URL: ${req.url}`)
     const numbers = req.url.toLowerCase().slice(1).split("/");
     if (numbers.length !== 2) {
         throwError(res, 501);
@@ -25,8 +26,8 @@ const listener = (req, res) => {
             return;
         }
     }
-    console.log(numbers);
     const result = numbers[0] * numbers[1];
+    console.log(`Return value: ${result}`)
     res.setHeader('Content-Type', "text/plain");
     res.writeHead(200);
     res.end(result.toString());
