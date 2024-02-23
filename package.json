@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon index.js"
+    "serve": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "Mykhailo Yaremenko <mykhailo.yaremenko@outlook.com>",
