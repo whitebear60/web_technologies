@@ -14,15 +14,15 @@ const listener = (req, res) => {
     console.info(`Request URL: ${req.url}`)
     const numbers = req.url.toLowerCase().slice(1).split("/");
     if (numbers.length !== 2) {
-        throwError(res, 501);
+        throwError(res, 404);
         return;
     }
     for (let i = 0; i < numbers.length; i++){
         const el = numbers[i];
-        if (/^[0-9]*$/.test(el)) {
+        if (/^[0-9]+$/.test(el)) {
             numbers[i] = parseInt(el);
         } else {
-            throwError(res, 501);
+            throwError(res, 404);
             return;
         }
     }
