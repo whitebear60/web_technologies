@@ -3,6 +3,11 @@ import http from "node:http";
 const port = 8080;
 const hostname = "localhost";
 
+/**
+ *
+ * @param {ServerResponse} res
+ * @param {number} code
+ */
 const throwError = (res, code) => {
     console.log(`Throwing a ${code} error`)
     res.setHeader('Content-Type', "text/plain");
@@ -10,6 +15,11 @@ const throwError = (res, code) => {
     res.end("ERROR: Please provide two numbers in the URL")
 }
 
+/**
+ * The main logic of the server
+ * @param {IncomingMessage} req
+ * @param {ServerResponse} res
+ */
 const listener = (req, res) => {
     console.info(`Request URL: ${req.url}`)
     const numbers = req.url.toLowerCase().slice(1).split("/");
