@@ -13,6 +13,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const path = require('path')
+const {handleGet, handlePost, handleDelete} = require("../../../../../index.js")
 
 // declare a new express app
 const app = express()
