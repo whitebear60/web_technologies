@@ -1,0 +1,147 @@
+{
+  "sort": {
+    "id": {
+      "field": "Код сорту",
+      "type": "number"
+    },
+    "name": {
+      "field": "Назва сорту",
+      "type": "string"
+    },
+    "year": {
+      "field": "Рік виведення",
+      "type": "number"
+    },
+    "adaptation": {
+      "field": "Адаптація до місцевих умов",
+      "type": "boolean"
+    },
+    "frost": {
+      "field": "Морозостійкість",
+      "type": "boolean"
+    },
+    "description": {
+      "field": "Опис сорту",
+      "type": "text"
+    },
+    "technology": {
+      "field": "Спосіб посадки",
+      "type": "text"
+    },
+    "picture": {
+      "field": "Зображення",
+      "type": "picture"
+    },
+    "approved": {
+      "field": "Схвалено інспекцією",
+      "type": "boolean"
+    },
+    "period": {
+      "field": "Час дозрівання",
+      "type": "enum",
+      "values": ["Ранній", "Середній", "Пізній"]
+    }
+  },
+  "batch": {
+    "id": {
+      "field": "Номер партії",
+      "type": "number"
+    },
+    "sort_id": {
+      "field": "Код сорту",
+      "type": "number"
+    },
+    "end": {
+      "field": "Термін придатності",
+      "type": "date"
+    },
+    "packing_id": {
+      "field": "Код пакування",
+      "type": "number"
+    },
+    "packing_date": {
+      "field": "Дата фасування",
+      "type": "date"
+    },
+    "weight": {
+      "field": "Вага, г",
+      "type": "number"
+    },
+    "price": {
+      "field": "Ціна за одиницю, грн",
+      "type": "number"
+    },
+    "batch_size": {
+      "field": "Розмір партії, шт.",
+      "type": "number"
+    }
+  },
+  "client": {
+    "id": {
+      "field": "Код клієнта",
+      "type": "number"
+    },
+    "company": {
+      "field": "Назва компанії",
+      "type": "string"
+    },
+    "address": {
+      "field": "Адреса компанії",
+      "type": "string"
+    },
+    "phone": {
+      "field": "Контактний телефон",
+      "type": "string"
+    }
+  },
+  "packing": {
+    "id": {
+      "field": "Код пакування",
+      "type": "number"
+    },
+    "packing_name": {
+      "field": "Назва типу пакування",
+      "type": "string"
+    },
+    "amount": {
+      "field": "Кількість насінин в упаковці",
+      "type": "number"
+    }
+  },
+  "seller": {
+    "id": {
+      "field": "Код продавця",
+      "type": "number"
+    },
+    "seller_name": {
+      "field": "Прізвище продавця",
+      "type": "string"
+    }
+  },
+  "purchase": {
+    "id": {
+      "field": "Код покупки",
+      "type": "number"
+    },
+    "client_id": {
+      "field": "Код клієнта",
+      "type": "number"
+    },
+    "batch_id": {
+      "field": "Код партії",
+      "type": "number"
+    },
+    "buy_date": {
+      "field": "Дата покупки",
+      "type": "date"
+    },
+    "is_cash": {
+      "field": "Оплата готівкою",
+      "type": "boolean"
+    },
+    "seller_id": {
+      "field": "Код продавця",
+      "type": "number"
+    }
+  }
+}

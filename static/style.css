@@ -1,0 +1,79 @@
+/*body {*/
+/*    height: 100vh;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+
+form {
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    -o-flex-direction: column;
+    -khtml-flex-direction: column;
+    flex-direction: column;
+    justify-content: space-between;
+    /*align-items: center;*/
+    width: 100%;
+}
+
+fluent-card.container {
+    --card-width: 600px;
+    --card-height: auto;
+    display: grid;
+    padding: 10px;
+    /*flex-direction: column;*/
+    justify-content: space-evenly;
+    gap: 10px;
+    grid-template-columns: auto auto auto;
+
+}
+
+fluent-card.container > fluent-button {
+    width: 100px;
+    height: auto;
+    padding: 5px;
+    /*padding-bottom: 2px;*/
+    display: flex;
+    justify-content: center;
+}
+
+.modal-card {
+    --card-width: 400px;
+    --card-height: auto;
+    display: flex;
+    padding: 10px;
+}
+
+.input {
+    width: 100%;
+}
+fluent-checkbox {
+    margin-top: 10px;
+}
+
+label {
+    margin-top: 2px;
+    display: block;
+}
+
+fluent-button.wide {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.formDialog {
+    --dialog-height: auto;
+    --dialog-width: 400px;
+    /*display: block;*/
+    padding: 10px;
+}
+button {
+    width: 150px;
+    margin: 5px;
+}
+
+.tab-pane {
+    padding: 25px;
+}

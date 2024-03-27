@@ -1,0 +1,46 @@
+# New Collection
+
+###
+POST http://localhost:8080/client
+Content-Type: application/x-www-form-urlencoded
+
+#sort_id = 2 &
+#name = Melon &
+#year = 1988 &
+#description = A usual melon &
+#technology = A trivial planting technology &
+#period = 3 &
+#adaptation = on &
+#approved = off
+
+company = Agriculture LLC &
+address = Dnipro, 18 Yavorytskoho ST
+
+
+###
+GET http://localhost:8080/purchase/10
+
+###
+GET http://localhost:8080/batch/5
+
+###
+
+POST http://localhost:8080/payment
+Content-Type: application/x-www-form-urlencoded
+
+batch_id = 7 &
+purchase_id = 10 &
+is_cash = 1 &
+transaction_sum = 3600
+
+###
+
+POST http://localhost:8080/packing
+Content-Type: application/x-www-form-urlencoded
+
+packing_name = Enormous &
+amount = 220
+
+###
+
+GET http://localhost:8080/sort
