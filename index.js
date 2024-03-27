@@ -139,8 +139,20 @@ const handleGet = async (req, res) => {
 const handleDelete = (req, res) => {
     const table = req.url.split('/')[1].toUpperCase();
     if (!req.params.id) {
-        res.sendStatus(401);
-        console.error("Don't know what to delete")
+        if (req.params.purchase_id && req.params.batch_id) {
+            console.log(req.baseUrl)
+            const query = `DELETE FROM PAYMENT WHERE purchase_id = ${req.params.purchase_id} AND batch_id = ${req.params.batch_id}`;
+            sql.query(query, (err) => {
+                if (err) {
+                    handleSqlError(err, res);
+                } else {
+                    res.sendStatus(200);
+                }
+            })
+        } else {
+            res.sendStatus(401);
+            console.error("Don't know what to delete")
+        }
     } else {
         let query = `DELETE FROM ${table} WHERE ${table}_id = ${req.params.id}`;
         sql.query(query, (err, rows) => {
@@ -153,6 +165,10 @@ const handleDelete = (req, res) => {
         })
     }
 }
+
+app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
+
+const standard_routes = ['batch', 'client', 'new_sort', 'packing', 'purchase', 'seller', 'sort']
 
 /**
  * @param {Request} req
@@ -295,3 +311,23 @@ const handlePost = (req, res, route) => {
         // console.log(req);
     }
 };
+standard_routes.forEach((route) => {
+    app.get(`/${route}`, (req, res) => handleGet(req, res))
+       .post(`/${route}`, (req, res) => handlePost(req, res, route))
+
+    app.get(`/${route}/:id`, (req, res) => handleGet(req, res))
+        .delete(`/${route}/:id`, (req, res) => handleDelete(req, res));
+
+})
+
+app.get(`/payment`, (req, res) => handleGet(req, res))
+    .post(`/payment`, (req, res) => handlePost(req, res, "payment"))
+
+app.get(`/payment/:purchase_id/:batch_id`, (req, res) => handleGet(req, res))
+    .delete(`/payment/:purchase_id/:batch_id`, (req, res) => handleDelete(req, res));
+
+app.use(`/getconfig`, express.static("./static/get_fields.json"))
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})

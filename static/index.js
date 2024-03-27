@@ -269,15 +269,10 @@ viewAllBtns.forEach(button => {
         const f = document.createElement("form");
         const form = evt.target.form
         evt.preventDefault()
-        console.log({target: null})
+        console.log({target: evt.target.form})
         evt.target.form.reset()
         const xhr = new XMLHttpRequest();
         xhr.responseType = "json"
-        xhr.open("get", form.action);
-        xhr.addEventListener("readystatechange", evt => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-
-            }
-        })
+        xhr.open("get", form.action)
     })
 })
