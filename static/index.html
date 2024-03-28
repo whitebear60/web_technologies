@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="index.js" defer></script>
 </head>
-<body class="vh-100 container justify-content-center flex-wrap d-flex">
+<body class="vh-100 justify-content-center flex-wrap d-flex">
 
 <!--<h2>Dialog</h2>-->
 <div class="card d-grid g-3 d-none">
@@ -42,6 +42,9 @@
                     <button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-sort-tab">Сорт</button>
                 </li>
                 <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-new-sort-tab">Новий сорт</button>
+                </li>
+                <li class="nav-item">
                     <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-batch-tab">Партія</button>
                 </li>
                 <li class="nav-item">
@@ -64,7 +67,7 @@
                         <div class="mb-3"><label for="get_sort_id" class="form-label">Код сорту</label>
                             <input type="text" name="id" id="get_sort_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="get-batch-tab">
@@ -72,7 +75,7 @@
                         <div class="mb-3"><label for="get_batch_id" class="form-label">Номер партії</label>
                             <input type="text" name="id" id="get_batch_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="get-client-tab">
@@ -80,7 +83,7 @@
                         <div class="mb-3"><label for="get_client_id" class="form-label">Код клієнта</label>
                             <input type="text" name="id" id="get_client_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="get-packing-tab">
@@ -88,7 +91,7 @@
                         <div class="mb-3"><label for="get_packing_id" class="form-label">Код пакування</label>
                             <input type="text" name="id" id="get_packing_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="get-purchase-tab">
@@ -96,7 +99,7 @@
                         <div class="mb-3"><label for="get_purchase_id" class="form-label">Код покупки</label>
                             <input type="text" name="id" id="get_purchase_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="get-seller-tab">
@@ -104,7 +107,15 @@
                         <div class="mb-3"><label for="get_seller_id" class="form-label">Код продавця</label>
                             <input type="text" name="id" id="get_seller_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" type="reset">Переглянути всі</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="get-new-sort-tab">
+                    <form action="/new_sort" method="get" id="getNewSort">
+                        <div class="mb-3"><label for="get_new_sort_id" class="form-label">Код сорту</label>
+                            <input type="text" name="id" id="get_new_sort_id" class="form-control"></div>
+                        <button class="btn btn-success" type="submit">Показати</button>
+                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
             </div>
@@ -148,8 +159,9 @@
                     <form action="/sort" method="post" id="sortForm">
                         <div class="row g-3 align-items-center">
                             <div class="mb-3 col-md-4">
-                                <label class="form-label" for="sort_id">ID сорту</label>
+                                <label class="form-label" for="sort_id">Код сорту</label>
                                 <input type="number" class="form-control" name="sort_id" id="sort_id" disabled>
+                                <span class="form-text">При додаванні нового сорту це поле рекомендовано залишити порожнім</span>
                             </div>
                             <div class="mb-3 col-md-4">
                                 <label class="form-label" for="sort_name">Назва</label>
@@ -223,6 +235,7 @@
                             <div class="mb-3">
                                 <label class="form-label" for="batch_id">Номер партії</label>
                                 <input type="number" class="form-control" name="batch_id" id="batch_id" disabled>
+                                <span class="form-text">При додаванні нової партії це поле рекомендовано залишити порожнім</span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="batch_sort_id">Сорт</label>
@@ -272,6 +285,8 @@
                         <div class="mb-3">
                             <label class="form-label" for="client_id">Номер клієнта</label>
                             <input type="number" min="0" class="form-control" name="client_id" id="client_id" disabled>
+                            <span class="form-text">При додаванні нового клієнта це поле рекомендовано залишити порожнім</span>
+
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="client_company_name">Назва компанії</label>
@@ -297,6 +312,8 @@
                         <div class="mb-3">
                             <label class="form-label" for="packing_id">Номер пакування</label>
                             <input type="number" min="0" class="form-control" name="packing_id" id="packing_id" disabled>
+                            <span class="form-text">При додаванні нового пакування це поле рекомендовано залишити порожнім</span>
+
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="packing_name">Назва типу упаковки</label>
@@ -318,6 +335,8 @@
                         <div class="mb-3">
                             <label class="form-label" for="purchase_id">Код покупки</label>
                             <input type="number" min="0" class="form-control" name="purchase_id" id="purchase_id" disabled>
+                            <span class="form-text">При додаванні нової покупки це поле рекомендовано залишити порожнім</span>
+
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="purchase_client_id">Клієнт</label>
@@ -361,8 +380,10 @@
                 <div class="tab-pane fade" id="post-seller-form">
                     <form action="/seller" method="post" id="sellerForm">
                         <div class="mb-3">
-                            <label class="form-label" for="seller_id">Номер продавця</label>
+                            <label class="form-label" for="seller_id">Код продавця</label>
                             <input type="number" min="0" class="form-control" name="seller_id" id="seller_id" disabled>
+                            <span class="form-text">При додаванні нового продавця це поле рекомендовано залишити порожнім</span>
+
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="seller_name">Прізвище продавця</label>
@@ -387,6 +408,24 @@
         </div>
         <div class="toast-body">
             Запит відправлено
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="table-modal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Інститут селекції рослин - Усі записи таблиці</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+<!--                <p>Modal body text goes here.</p>-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрити</button>
+<!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
         </div>
     </div>
 </div>

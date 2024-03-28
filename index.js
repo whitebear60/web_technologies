@@ -18,7 +18,7 @@ import {readBooleans} from "formidable/src/helpers/readBooleans.js";
 /**
  * Basic SQL error handler
  * @param {mysql.QueryError} err
- * @param {Response<ResBody, LocalsObj>} res
+ * @param {Response} res
  */
 const handleSqlError = (err, res) => {
     console.log(500);
@@ -49,39 +49,49 @@ sql.connect((err) => {
 })
 
 /**
- * @param {express.Request<P, ResBody, ReqBody, ReqQuery, LocalsObj>} req
- * @param {express.Response<ResBody, LocalsObj>} res
+ * @param {express.Request} req
+ * @param {express.Response} res
  */
 const handleGet = async (req, res) => {
-    console.log(req.route)
+    const route = req.route.path.split("/")[1];
     const table = req.url.split('/')[1].toUpperCase();
     let query = ""
 
         const column = table.toLowerCase().concat("_id");
     let description = [];
+    const joinIds = [];
     await sql.promise().query(`DESCRIBE herb_institute.${table}`).then((out) => {
         const rows = out[0]
-        const fields = out[1]
-        rows.forEach(el => {
+        rows.forEach((el) => {
             description.push(el.Field)
+            if (el.Field !== `${route}_id` && el.Field.endsWith("_id")) joinIds.push(el.Field)
         })
+        console.log(`rows: ${JSON.stringify(rows)}`)
+        // console.log(`fields: ${JSON.stringify(fields)}`)
     })
+    console.log(joinIds)
     if (!Object.keys(req.params).length) description = description.filter(item => item !== "picture")
     console.log("DESCRIBE: ", description)
     console.log("TABLE: ", table)
     query = `SELECT ${[...description]} FROM ${table}`;
-    console.log(query);
-    if (table.toUpperCase() !== "PAYMENT") {
-        if (req.params.id) query = query.concat(` WHERE ${column} = ${req.params.id}`);
-    } else {
-        if (req.params.batch_id && req.params.purchase_id) {
-            const batch_id = req.params.batch_id;
-            const purchase_id = req.params.purchase_id;
-            console.log("BATCH_ID: ", batch_id);
-            console.log(purchase_id);
-            query = query.concat(` WHERE batch_id = ${batch_id} AND purchase_id = ${purchase_id}`);
+    joinIds.forEach(el => {
+        switch (el) {
+            case "client_id":
+                query = query.replace("client_id", "C.company client_id")
+                query = query.concat(`\nJOIN CLIENT C ON C.client_id = ${table}.client_id`)
+                break;
+            case "seller_id":
+                query = query.replace("seller_id", "SL.seller_name seller_id")
+                query = query.concat(`\nJOIN SELLER SL ON SL.seller_id = ${table}.seller_id`)
+                break;
+            case "sort_id":
+                query = query.replace("sort_id", "S.name sort_id");
+                query = query.concat(`\nLEFT JOIN SORT S ON S.sort_id = ${table}.sort_id`)
         }
-    }
+    })
+    const dateFields = ["end", "packing_date", "date", "buy_date"]
+    if (req.params.id) query = query.concat(` WHERE ${column} = ${req.params.id}`);
+    console.log(query);
     sql.query(query, (err, rows) => {
         if(err) {
             handleSqlError(err, res);
@@ -122,6 +132,19 @@ const handleGet = async (req, res) => {
                 rows.forEach(el => out.push(new PaymentDto(el)));
                 break;
         }
+        out.forEach(dto => {
+        console.log(dto)
+            // console.log(Object.keys(dto).get("end"))
+            dateFields.forEach(el => {
+                if (dto[el]) {
+                    dto[el] = Intl.DateTimeFormat("uk-ua", {
+                        "day": "numeric",
+                        "month": "long",
+                        "year": "numeric"
+                    }).format(new Date(dto[el]))
+                }
+            })
+        })
 
         res.status = 200;
         if (out.length === 0) {
@@ -133,29 +156,17 @@ const handleGet = async (req, res) => {
 }
 
 /**
- * @param {Request<P, ResBody, ReqBody, ReqQuery, LocalsObj>} req
- * @param {Response<ResBody, LocalsObj>} res
+ * @param {Request} req
+ * @param {Response} res
  */
 const handleDelete = (req, res) => {
     const table = req.url.split('/')[1].toUpperCase();
     if (!req.params.id) {
-        if (req.params.purchase_id && req.params.batch_id) {
-            console.log(req.baseUrl)
-            const query = `DELETE FROM PAYMENT WHERE purchase_id = ${req.params.purchase_id} AND batch_id = ${req.params.batch_id}`;
-            sql.query(query, (err) => {
-                if (err) {
-                    handleSqlError(err, res);
-                } else {
-                    res.sendStatus(200);
-                }
-            })
-        } else {
-            res.sendStatus(401);
-            console.error("Don't know what to delete")
-        }
+        res.sendStatus(401);
+        console.error("Don't know what to delete")
     } else {
         let query = `DELETE FROM ${table} WHERE ${table}_id = ${req.params.id}`;
-        sql.query(query, (err, rows) => {
+        sql.query(query, (err) => {
             if(err) {
                 handleSqlError(err, res)
                 return;
@@ -291,7 +302,7 @@ const handlePost = (req, res, route) => {
             const query = `INSERT INTO ${route.toUpperCase()} (${query_fields}) VALUES (${query_values});`
             console.log(query)
             if (query) {
-                sql.query(query, (err, result, fields) => {
+                sql.query(query, (err, result) => {
                     if (err) {
                         if (err.code === 'ER_DATA_TOO_LONG') {
                             res.status(413).send("The image is too large")

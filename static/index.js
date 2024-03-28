@@ -51,7 +51,7 @@ postForm.forEach(el => el.addEventListener('submit', (e) => {
                 newSortFormData.set("date", document.getElementById("new_sort_selection_date").value)
                 newSortFormData.set("comment", document.getElementById("new_sort_comment").value)
                 newSortReq.responseType = "json"
-                newSortReq.addEventListener("readystatechange", evt => {
+                newSortReq.addEventListener("readystatechange", () => {
                     if (newSortReq.readyState === XMLHttpRequest.DONE) {
                         if (newSortReq.status === 200){
                             showToast(`Запис додано успішно (ID = ${req.response.elementId})`)
@@ -137,11 +137,11 @@ const displayEntry = (response, config) => {
                 paragraph.appendChild(img)
                 wrap.appendChild(paragraph)
                 break
-            case "date":
+/*            case "date":
                 paragraph.innerText = Intl.DateTimeFormat("uk-ua").format(new Date(response[key]))
                 paragraph.prepend(strong)
                 wrap.appendChild(paragraph)
-                break
+                break*/
             default:
                 if (!response[key]) return
 
@@ -157,6 +157,24 @@ const displayEntry = (response, config) => {
     card.replaceChildren(wrap);
 };
 
+/**
+ * @param {Function} callbackFn
+ */
+const getConfig = (callbackFn) => {
+    const config = new XMLHttpRequest();
+    config.open("get", "/getconfig")
+    config.responseType = "json"
+    config.addEventListener("readystatechange", () => {
+        if(config.readyState === XMLHttpRequest.DONE) {
+            if (config.status === 404) {
+                showToast("Помилка додатку", false)
+            } else {
+                callbackFn(config.response)
+            }
+        }
+    })
+    config.send()
+}
 
 const getForm = document.querySelectorAll("form[method=get]")
 getForm.forEach(form => form.addEventListener("submit", e => {
@@ -168,27 +186,17 @@ getForm.forEach(form => form.addEventListener("submit", e => {
         const xhr = new XMLHttpRequest();
         xhr.open("get", `/${action}/${id}`)
         xhr.responseType = "json"
-        xhr.addEventListener("readystatechange", (evt) => {
+        xhr.addEventListener("readystatechange", () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 console.log(xhr.status)
                 if (xhr.status !== 200) {
                     showToast(`Обʼєкт не знайдено (${xhr.status})`, false);
                 }
                 const fields = {}
-                const config = new XMLHttpRequest();
-                config.open("get", "/getconfig")
-                config.responseType = "json"
-                config.addEventListener("readystatechange", evt => {
-                    if(config.readyState === XMLHttpRequest.DONE) {
-                        if (config.status === 404) {
-                            showToast("Помилка додатку", false)
-                        } else {
-                            Object.assign(fields, config.response[action])
-                            displayEntry(xhr.response, fields)
-                        }
-                    }
+                getConfig((value) => {
+                    Object.assign(fields, value[action])
+                    displayEntry(xhr.response, fields)
                 })
-                config.send()
 
             }
         })
@@ -231,7 +239,7 @@ uploadField.onchange = function() {
 
 };
 
-document.querySelector("#sort_new").addEventListener("change", (evt) => {
+document.querySelector("#sort_new").addEventListener("change", () => {
     document.querySelector("#new_sort_inputs").classList.toggle("d-none")
     document.querySelector("#new_sort_selection_date").value = ""
     document.querySelector("#new_sort_comment").value = ""
@@ -266,7 +274,6 @@ const loadSelect = (route, el, fields) => {
 const viewAllBtns = document.querySelectorAll("button.view-all[type=reset]")
 viewAllBtns.forEach(button => {
     button.addEventListener("click", evt => {
-        const f = document.createElement("form");
         const form = evt.target.form
         evt.preventDefault()
         console.log({target: evt.target.form})
@@ -274,5 +281,73 @@ viewAllBtns.forEach(button => {
         const xhr = new XMLHttpRequest();
         xhr.responseType = "json"
         xhr.open("get", form.action)
+        xhr.addEventListener("readystatechange", () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                const values = xhr.response
+                getConfig((val) => {
+                    console.log(form.action)
+                    const action = form.getAttribute("action").slice(1)
+                    const config = val[action]
+                    console.log(config)
+
+                    const div = document.createElement("div")
+                    div.classList.add("table-responsive")
+                    div.id = "display-table"
+
+                    const table = document.createElement("table")
+                    table.classList.add("table", "table-striped", "table-sm", "table-bordered")
+                    const thead = document.createElement("thead")
+                    Object.keys(config).forEach(entry => {
+                        const th = document.createElement("th")
+                        if (entry === "picture") return
+                        th.innerText = config[entry].field
+                        thead.appendChild(th)
+                    })
+                    table.appendChild(thead)
+                    const tbody = document.createElement("tbody")
+                    values.forEach(entry => {
+                        console.log(entry)
+                        const tr = document.createElement("tr")
+                        Object.values(entry).forEach((val, index) => {
+                            let td;
+                            if (index === 0) {
+                                td = document.createElement("th")
+                            } else {
+                                td = document.createElement("td")
+                            }
+                            const type = config[Object.keys(entry)[index]].type
+                            switch (type.toLowerCase()) {
+                                case "boolean":
+                                    val ? td.innerText = "Так" : td.innerText = "Ні"
+                                    break
+                                case "enum":
+                                    const period = config[Object.keys(entry)[index]].values[val-1]
+                                    if (period) td.innerText = period
+                                    console.log(config[Object.keys(entry)[index]].values[val-1])
+                                    break
+                                default:
+                                    td.innerText = val
+                            }
+                            tr.appendChild(td)
+                        })
+                        tbody.appendChild(tr)
+                    })
+                    table.appendChild(tbody)
+                    div.appendChild(table)
+                    if (action === "sort") {
+                        document.querySelector(".modal-dialog").classList.add("modal-fullscreen")
+                        document.querySelector(".modal-dialog").classList.remove("modal-xl")
+                    } else {
+                        document.querySelector(".modal-dialog").classList.add("modal-xl")
+                        document.querySelector(".modal-dialog").classList.remove("modal-fullscreen")
+                    }
+                    const body = document.querySelector("#modal-body");
+                    if (body.lastChild === document.querySelector("#display-table")) body.removeChild(document.querySelector("#display-table"))
+                    body.appendChild(div)
+
+                })
+            }
+        })
+        xhr.send();
     })
 })

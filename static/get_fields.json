@@ -42,13 +42,27 @@
       "values": ["Ранній", "Середній", "Пізній"]
     }
   },
+  "new_sort": {
+    "id": {
+      "field": "Код сорту",
+      "type": "number"
+    },
+    "date": {
+      "field": "Дата виведення",
+      "type": "date"
+    },
+    "comment": {
+      "field": "Коментар до тестування",
+      "type": "comment"
+    }
+  },
   "batch": {
     "id": {
       "field": "Номер партії",
       "type": "number"
     },
     "sort_id": {
-      "field": "Код сорту",
+      "field": "Сорт",
       "type": "number"
     },
     "end": {
@@ -124,11 +138,11 @@
       "type": "number"
     },
     "client_id": {
-      "field": "Код клієнта",
+      "field": "Клієнт",
       "type": "number"
     },
     "batch_id": {
-      "field": "Код партії",
+      "field": "Номер партії",
       "type": "number"
     },
     "buy_date": {
@@ -140,7 +154,7 @@
       "type": "boolean"
     },
     "seller_id": {
-      "field": "Код продавця",
+      "field": "Продавець",
       "type": "number"
     }
   }
