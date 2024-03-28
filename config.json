@@ -1,0 +1,10 @@
+{
+    "hostname": "localhost",
+    "port": "8080",
+    "mysql": {
+        "hostname": "localhost",
+        "username": "",
+        "password": "",
+        "database": "herbinstitute"
+    }
+}
