@@ -1,6 +1,5 @@
 node_modules/
 dist/
-config.json
 config.local.json
 http-client.env.json
 .*DS_Store
