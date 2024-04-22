@@ -6,27 +6,27 @@
 3. Відкрийте командний рядок та перейдіть у папку з проєктом
 4. Виконайте наступні команди для того, аби встановити необхідні залежності (відповідно до Вашої системи):
    - Powershell (Windows):
-   ```pwsh
+   ```shell
    iwr https://get.pnpm.io/install.ps1 -useb | iex
    pnpm install
    ```
     - Linux, macOS: 
-    ```sh
+    ```shell
     curl -fsSL https://get.pnpm.io/install.sh | sh -
     pnpm install
     ```
 
     АБО
    (не залежно від системи)
-   ```sh
-   npm install -g @pnpm/exe
+   ```shell
+   npm install -g pnpm
    pnpm install
    ```
    Для додаткової інформації [див. документацію pnpm](https://pnpm.io/installation) (англійською)
 5. Створіть базу даних на сервері БД MySQL за допомогою скрипта `herbnistitute_create.sql`
 6. У файлі `config.json` впишіть імʼя користувача та пароль на сервері бази даних
 7. Запустіть сервер за допомогою 
-    ```
-    npm start
+    ```shell
+    pnpm start
     ```
 8. Відкрийте http://localhost:8080 у браузері

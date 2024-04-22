@@ -32,7 +32,7 @@ const currDir = (fileUrl) => {
 }
 
 const app = express();
-const config = JSON.parse(fs.readFileSync("config.local.json").toString());
+const config = JSON.parse(fs.readFileSync("config.json").toString());
 
 const port = config.port;
 
@@ -150,7 +150,8 @@ const handleGet = async (req, res) => {
         if (out.length === 0) {
             res.sendStatus(404)
         } else {
-            out.length === 1 ? res.send(out[0]) : res.send(out);
+            // out.length === 1 ? res.send(out[0]) : res.send(out);
+            res.send(out);
         }
     })
 }

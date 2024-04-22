@@ -1,4 +1,4 @@
-CREATE DATABASE `herb_institute`;
+CREATE DATABASE IF NOT EXISTS `herb_institute`;
 USE `herb_institute`;
 
 -- Сreating the new tables according to the developed DB structure

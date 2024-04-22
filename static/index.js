@@ -283,69 +283,88 @@ viewAllBtns.forEach(button => {
         xhr.open("get", form.action)
         xhr.addEventListener("readystatechange", () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-                const values = xhr.response
-                getConfig((val) => {
-                    console.log(form.action)
-                    const action = form.getAttribute("action").slice(1)
-                    const config = val[action]
-                    console.log(config)
+                if (xhr.status === 200) {
+                    const values = xhr.response
+                    getConfig((val) => {
+                        console.log(form.action)
+                        const action = form.getAttribute("action").slice(1)
+                        const config = val[action]
+                        console.log(config)
 
-                    const div = document.createElement("div")
-                    div.classList.add("table-responsive")
-                    div.id = "display-table"
+                        const div = document.createElement("div")
+                        div.classList.add("table-responsive")
+                        div.id = "display-table"
 
-                    const table = document.createElement("table")
-                    table.classList.add("table", "table-striped", "table-sm", "table-bordered")
-                    const thead = document.createElement("thead")
-                    Object.keys(config).forEach(entry => {
-                        const th = document.createElement("th")
-                        if (entry === "picture") return
-                        th.innerText = config[entry].field
-                        thead.appendChild(th)
-                    })
-                    table.appendChild(thead)
-                    const tbody = document.createElement("tbody")
-                    values.forEach(entry => {
-                        console.log(entry)
-                        const tr = document.createElement("tr")
-                        Object.values(entry).forEach((val, index) => {
-                            let td;
-                            if (index === 0) {
-                                td = document.createElement("th")
-                            } else {
-                                td = document.createElement("td")
-                            }
-                            const type = config[Object.keys(entry)[index]].type
-                            switch (type.toLowerCase()) {
-                                case "boolean":
-                                    val ? td.innerText = "Так" : td.innerText = "Ні"
-                                    break
-                                case "enum":
-                                    const period = config[Object.keys(entry)[index]].values[val-1]
-                                    if (period) td.innerText = period
-                                    console.log(config[Object.keys(entry)[index]].values[val-1])
-                                    break
-                                default:
-                                    td.innerText = val
-                            }
-                            tr.appendChild(td)
+                        const table = document.createElement("table")
+                        table.classList.add("table", "table-striped", "table-sm", "table-bordered")
+                        const thead = document.createElement("thead")
+                        Object.keys(config).forEach(entry => {
+                            const th = document.createElement("th")
+                            if (entry === "picture") return
+                            th.innerText = config[entry].field
+                            thead.appendChild(th)
                         })
-                        tbody.appendChild(tr)
-                    })
-                    table.appendChild(tbody)
-                    div.appendChild(table)
-                    if (action === "sort") {
-                        document.querySelector(".modal-dialog").classList.add("modal-fullscreen")
-                        document.querySelector(".modal-dialog").classList.remove("modal-xl")
-                    } else {
-                        document.querySelector(".modal-dialog").classList.add("modal-xl")
-                        document.querySelector(".modal-dialog").classList.remove("modal-fullscreen")
-                    }
-                    const body = document.querySelector("#modal-body");
-                    if (body.lastChild === document.querySelector("#display-table")) body.removeChild(document.querySelector("#display-table"))
-                    body.appendChild(div)
+                        table.appendChild(thead)
+                        const tbody = document.createElement("tbody")
+                        values.forEach(entry => {
+                            console.log(entry)
+                            const tr = document.createElement("tr")
+                            Object.values(entry).forEach((val, index) => {
+                                let td;
+                                if (index === 0) {
+                                    td = document.createElement("th")
+                                } else {
+                                    td = document.createElement("td")
+                                }
+                                const type = config[Object.keys(entry)[index]].type
+                                switch (type.toLowerCase()) {
+                                    case "boolean":
+                                        val ? td.innerText = "Так" : td.innerText = "Ні"
+                                        break
+                                    case "enum":
+                                        const period = config[Object.keys(entry)[index]].values[val-1]
+                                        if (period) td.innerText = period
+                                        console.log(config[Object.keys(entry)[index]].values[val-1])
+                                        break
+                                    default:
+                                        td.innerText = val
+                                }
+                                tr.appendChild(td)
+                            })
+                            tbody.appendChild(tr)
+                        })
+                        table.appendChild(tbody)
+                        div.appendChild(table)
+                        if (action === "sort") {
+                            document.querySelector(".modal-dialog").classList.add("modal-fullscreen")
+                            document.querySelector(".modal-dialog").classList.remove("modal-xl")
+                        } else {
+                            document.querySelector(".modal-dialog").classList.add("modal-xl")
+                            document.querySelector(".modal-dialog").classList.remove("modal-fullscreen")
+                        }
+                        const body = document.querySelector("#modal-body");
+                        for(let i = 0; i < body.children.length; i++) {
+                            body.removeChild(body.children[0])
+                        }
+                        body.appendChild(div)
 
-                })
+                    })
+                } else {
+                    const div = document.createElement("div");
+                    div.classList.add('text-center')
+                    if (xhr.status === 404) {
+                        div.innerText = "Не знайдено елементів заданого типу у базі даних"
+                    } else {
+                        div.innerText = `Помилка при виконанні запиту (${xhr.status})`
+                    }
+                    document.querySelector(".modal-dialog").classList.add("modal-xl")
+                    document.querySelector(".modal-dialog").classList.remove("modal-fullscreen")
+                    const body = document.querySelector("#modal-body");
+                    for(let i = 0; i < body.children.length; i++) {
+                        body.removeChild(body.children[0])
+                    }
+                    body.appendChild(div)
+                }
             }
         })
         xhr.send();
