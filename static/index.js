@@ -97,6 +97,7 @@ const displayEntry = (response, config) => {
     const card = document.querySelector("#display-card")
     const wrap = document.createElement("div")
     wrap.classList.add("row")
+    response = response[0]
     Object.keys(response).forEach(key => {
         const entry = config[key]
         console.log(entry)
