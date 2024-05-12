@@ -1,3 +1,4 @@
+SET SQL_SAFE_UPDATES = 0;
 DROP DATABASE IF EXISTS `herb_institute`;
 CREATE DATABASE IF NOT EXISTS `herb_institute`;
 USE `herb_institute`;
@@ -192,11 +193,7 @@ INSERT INTO `SORT` (`name`, `year`, `adaptation`, `frost`, `approved`, `period`)
 
 ('Weißer Wintertaffetapfel', 1797, true, true, true, 3); 
 
- 
 
-# DROP TRIGGER new_sort_date; 
-
- 
 
 INSERT INTO herb_institute.NEW_SORT (new_sort_id, date, comment) VALUES 
 

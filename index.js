@@ -178,9 +178,6 @@ const handleDelete = (req, res) => {
     }
 }
 
-app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
-
-const standard_routes = ['batch', 'client', 'new_sort', 'packing', 'purchase', 'seller', 'sort']
 
 /**
  * @param {Request} req
@@ -323,6 +320,10 @@ const handlePost = (req, res, route) => {
         // console.log(req);
     }
 };
+app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
+
+const standard_routes = ['batch', 'client', 'new_sort', 'packing', 'purchase', 'seller', 'sort']
+
 standard_routes.forEach((route) => {
     app.get(`/${route}`, (req, res) => handleGet(req, res))
        .post(`/${route}`, (req, res) => handlePost(req, res, route))
