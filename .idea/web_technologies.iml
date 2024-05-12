@@ -14,5 +14,6 @@
     <orderEntry type="module" module-name="ОБДЗ" />
     <orderEntry type="library" name="bootstrap" level="application" />
     <orderEntry type="library" name="634df547f9" level="application" />
+    <orderEntry type="module" module-name="web_technologies_auth" />
   </component>
 </module>

@@ -1,5 +1,5 @@
 {
-    "hostname": "localhost",
+    "hostname": "",
     "port": "8080",
     "mysql": {
         "hostname": "localhost",
