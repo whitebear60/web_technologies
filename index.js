@@ -63,11 +63,9 @@ const verifyJWT = async (auth, res) => {
         return
     }
     const jwt = auth.split(" ")[1]
-    // console.log(atob("c2VjcmV0X3Bhc3N3b3JkX2Zvcl9kaWdpdGFsX3NpZ25hdHVyZV9vZl90aGVfdG9rZW5fYnlfc3VuYnVyc3Q0"))
     const secret = new TextEncoder().encode(
         atob("c2VjcmV0X3Bhc3N3b3JkX2Zvcl9kaWdpdGFsX3NpZ25hdHVyZV9vZl90aGVfdG9rZW5fYnlfc3VuYnVyc3Q0"),
     )
-    // console.log(secret)
     try {
         const msg = await jose.jwtVerify(jwt, secret)
         console.log(msg)
