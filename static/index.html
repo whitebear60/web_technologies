@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Інститут селекції рослин</title>
+    <title>Розклад занять</title>
     <script src="https://kit.fontawesome.com/634df547f9.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -39,81 +39,70 @@
         <div class="container tab-pane fade show active" id="get-tabs">
             <ul class="nav nav-pills d-flex align-items-center justify-content-center">
                 <li class="nav-item">
-                    <button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-sort-tab">Сорт</button>
+                    <button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-group-tab">Група</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-new-sort-tab">Новий сорт</button>
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-classroom-tab">Аудиторія</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-batch-tab">Партія</button>
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-student-tab">Студент</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-client-tab">Клієнт</button>
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-teacher-tab">Викладач</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-packing-tab">Пакування</button>
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-classes-tab">Освітні компоненти</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-purchase-tab">Покупка</button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-seller-tab">Продавець</button>
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#get-schedule-tab">Розклад</button>
                 </li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="get-sort-tab">
-                    <form action="/sort" method="get" id="getSortForm">
-                        <div class="mb-3"><label for="get_sort_id" class="form-label">Код сорту</label>
-                            <input type="text" name="id" id="get_sort_id" class="form-control"></div>
+                <div class="tab-pane fade show active" id="get-group-tab">
+                    <form action="/group" method="get" id="getGroup">
+                        <div class="mb-3"><label for="get_group_id" class="form-label">Код групи</label>
+                            <input type="text" name="id" id="get_group_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="get-batch-tab">
-                    <form action="/batch" method="get" id="getBatch">
-                        <div class="mb-3"><label for="get_batch_id" class="form-label">Номер партії</label>
-                            <input type="text" name="id" id="get_batch_id" class="form-control"></div>
+                <div class="tab-pane fade" id="get-classroom-tab">
+                    <form action="/classroom" method="get" id="getClassroom">
+                        <div class="mb-3"><label for="get_classroom_id" class="form-label">Номер аудиторії</label>
+                            <input type="text" name="id" id="get_classroom_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="get-client-tab">
-                    <form action="/client" method="get" id="getClient">
-                        <div class="mb-3"><label for="get_client_id" class="form-label">Код клієнта</label>
-                            <input type="text" name="id" id="get_client_id" class="form-control"></div>
+                <div class="tab-pane fade" id="get-classes-tab">
+                    <form action="/classes" method="get" id="getClasses">
+                        <div class="mb-3"><label for="get_classes_id" class="form-label">Код освітньої компоненти</label>
+                            <input type="text" name="id" id="get_classes_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="get-packing-tab">
-                    <form action="/packing" method="get" id="getPacking">
-                        <div class="mb-3"><label for="get_packing_id" class="form-label">Код пакування</label>
-                            <input type="text" name="id" id="get_packing_id" class="form-control"></div>
+                <div class="tab-pane fade" id="get-schedule-tab">
+                    <form action="/schedule" method="get" id="getSchedule">
+                        <div class="mb-3"><label for="get_schedule_id" class="form-label">Код заняття</label>
+                            <input type="text" name="id" id="get_schedule_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="get-purchase-tab">
-                    <form action="/purchase" method="get" id="getPurchase">
-                        <div class="mb-3"><label for="get_purchase_id" class="form-label">Код покупки</label>
-                            <input type="text" name="id" id="get_purchase_id" class="form-control"></div>
+                <div class="tab-pane fade" id="get-student-tab">
+                    <form action="/student" method="get" id="getStudent">
+                        <div class="mb-3"><label for="get_student_id" class="form-label">Код студента</label>
+                            <input type="text" name="id" id="get_student_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="get-seller-tab">
-                    <form action="/seller" method="get" id="getSeller">
-                        <div class="mb-3"><label for="get_seller_id" class="form-label">Код продавця</label>
-                            <input type="text" name="id" id="get_seller_id" class="form-control"></div>
-                        <button class="btn btn-success" type="submit">Показати</button>
-                        <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
-                    </form>
-                </div>
-                <div class="tab-pane fade" id="get-new-sort-tab">
-                    <form action="/new_sort" method="get" id="getNewSort">
-                        <div class="mb-3"><label for="get_new_sort_id" class="form-label">Код сорту</label>
-                            <input type="text" name="id" id="get_new_sort_id" class="form-control"></div>
+                <div class="tab-pane fade" id="get-teacher-tab">
+                    <form action="/teacher" method="get" id="getTeacher">
+                        <div class="mb-3"><label for="get_teacher_id" class="form-label">Код викладача</label>
+                            <input type="text" name="id" id="get_teacher_id" class="form-control"></div>
                         <button class="btn btn-success" type="submit">Показати</button>
                         <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>
                     </form>
@@ -134,172 +123,98 @@
         <div class="container tab-pane fade" id="post-tabs">
 
             <ul class="nav nav-pills d-flex align-items-center justify-content-center">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="post-sort-tab" data-bs-toggle="tab" data-bs-target="#post-sort-form" type="button" role="tab" aria-selected="true">Новий сорт</button>
+                <li class="nav-item">
+                    <button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-group-tab">Група</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="post-batch-tab" data-bs-toggle="tab" data-bs-target="#post-batch-form" type="button" role="tab" aria-selected="false">Нова партія</button>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-classroom-tab">Аудиторія</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="post-client-tab" data-bs-toggle="tab" data-bs-target="#post-client-form" type="button" role="tab" aria-selected="false">Новий клієнт</button>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-student-tab">Студент</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="post-packing-tab" data-bs-toggle="tab" data-bs-target="#post-packing-form" type="button" role="tab" aria-selected="false">Нове пакування</button>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-teacher-tab">Викладач</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="post-purchase-tab" data-bs-toggle="tab" data-bs-target="#post-purchase-form" type="button" role="tab" aria-selected="false">Нова покупка</button>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-classes-tab">Освітні компоненти</button>
                 </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="post-seller-tab" data-bs-toggle="tab" data-bs-target="#post-seller-form" type="button" role="tab" aria-selected="false">Новий продавець</button>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#post-schedule-tab">Розклад</button>
                 </li>
             </ul>
-
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="post-sort-form">
-                    <form action="/sort" method="post" id="sortForm">
+                <div class="tab-pane fade show active" id="post-group-tab">
+                    <form action="/group" method="post" id="groupForm">
                         <div class="row g-3 align-items-center">
-                            <div class="mb-3 col-md-4">
-                                <label class="form-label" for="sort_id">Код сорту</label>
-                                <input type="number" class="form-control" name="sort_id" id="sort_id" disabled>
-                                <span class="form-text">При додаванні нового сорту це поле рекомендовано залишити порожнім</span>
-                            </div>
-                            <div class="mb-3 col-md-4">
-                                <label class="form-label" for="sort_name">Назва</label>
-                                <input type="text" class="form-control" id="sort_name" maxlength="40" name="name" required>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="sort_year" class="form-label">Рік виведення</label>
-                                    <input type="number" name="year" class="form-control" min="0" id="sort_year">
-                                </div>
-                            </div>
-                        </div>
-                        <!--            <fluent-number-field></fluent-number-field>-->
-                        <div class="mb-3">
-                            <label for="sort_description" class="form-label">Опис</label>
-                            <textarea name="description" id="sort_description" maxlength="200" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="sort_technology" class="form-label">Спосіб посадки</label>
-                            <textarea name="technology" id="sort_technology" maxlength="16777215" class="form-control" rows="2"></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="mb-3 col-md-6">
-                                <label for="sort_period">Час дозрівання</label>
-                                <select name="period" class="form-select" id="sort_period">
-                                    <option value="" disabled selected>Клацніть щоб обрати...</option>
-                                    <option value="1">Ранній</option>
-                                    <option value="2">Середній</option>
-                                    <option value="3">Пізній</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="sort_picture">Зображення</label>
-                                <input type="file" name="picture" id="sort_picture" class="form-control" accept="image/jpeg, image/png">
-                            </div>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="adaptation" id="sort_adaptation" class="form-check-input">
-                            <label for="sort_adaptation" class="form-check-label">Сорт адаптований до місцевих умов</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="frost" id="sort_frost" class="form-check-input">
-                            <label for="sort_frost" class="form-check-label">Сорт морозостійкий</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="approved" id="sort_approved" class="form-check-input">
-                            <label for="sort_approved" class="form-check-label">Сорт був схвалений інспекцією</label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" id="sort_new" class="form-check-input">
-                            <label for="sort_new" class="form-check-label">Сорт був виведений у стінах університету</label>
-                        </div>
-                        <div class="row g-3 align-items-center d-none" id="new_sort_inputs">
                             <div class="mb-3">
-                                <label class="form-label" for="new_sort_selection_date">Дата виведення</label>
-                                <input type="date" class="form-control" name="date" id="new_sort_selection_date">
+                                <label class="form-label" for="group_id">Код групи</label>
+                                <input type="number" class="form-control" name="group_id" id="group_id" disabled>
+                                <span class="form-text">При додаванні нової групи сорту це поле рекомендовано залишити порожнім</span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="new_sort_comment">Коментар</label>
-                                <!--                        <textarea class="form-control" rows="2" id="new_sort_comment" maxlength="100" name="comment"></textarea>-->
-                                <textarea class="form-control" rows="2" id="new_sort_comment" maxlength="4294967295" name="comment"></textarea>
+                                <label class="form-label" for="group_name">Шифр групи</label>
+                                <input type="text" class="form-control" id="group_name" maxlength="10" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="group_year" class="form-label">Поточний курс</label>
+                                <input type="number" name="year" class="form-control" min="0" id="group_year">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-success">Відправити</button>
                         <button type="reset" class="btn btn-danger">Скинути форму</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="post-batch-form">
-                    <form action="/batch" method="post" id="batchForm">
+                <div class="tab-pane fade" id="post-classes-tab">
+                    <form action="/classes" method="post" id="classesForm">
                         <div class="row g-3 align-items-center">
                             <div class="mb-3">
-                                <label class="form-label" for="batch_id">Номер партії</label>
-                                <input type="number" class="form-control" disabled name="batch_id" id="batch_id">
-                                <span class="form-text">При додаванні нової партії це поле рекомендовано залишити порожнім</span>
+                                <label class="form-label" for="class_id">Шифр освітньої компоненти</label>
+                                <input type="number" class="form-control" disabled name="class_id" id="class_id">
+                                <span class="form-text">При додаванні нової освітньої компоненти це поле рекомендовано залишити порожнім</span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label" for="batch_sort_id">Сорт</label>
-                                <!--                        <input type="text" class="form-control" id="sort_name" maxlength="40" name="name" required>-->
-                                <select class="form-select" name="sort_id" id="batch_sort_id" onclick="loadSelect('sort', document.querySelector('#batch_sort_id'), ['id', 'name', 'year'])">
-                                    <option value="" id="batch_sort_id_empty" data-purpose="load">
+                                <label class="form-label" for="class_name">Назва освітньої компоненти</label>
+                                <input type="text" required maxlength="100" class="form-control" name="class_name" id="class_name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="class_teacher">Викладач</label>
+                                <select class="form-select" name="teacher" id="class_teacher">
+                                    <option value="" id="teacher_empty" data-purpose="load">
                                         Click here to load...
                                     </option>
                                 </select>
-                                <label class="form-label" for="batch_packing_id">Тип пакування</label>
-                                <select class="form-select" name="packing_id" id="batch_packing_id" onclick="loadSelect('packing', document.querySelector('#batch_packing_id'), ['id', 'packing_name', 'amount'])">
-                                    <option value="" id="batch_packing_id_empty" data-purpose="load">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="class_classroom">Аудиторія</label>
+                                <select class="form-select" name="classroom" id="class_classroom">
+                                    <option value="" id="classroom_empty" data-purpose="load">
                                         Click here to load...
                                     </option>
                                 </select>
-                                <label for="batch_packing_date" class="form-label">Дата фасування</label>
-                                <input type="date" name="packing_date" id="batch_packing_date" class="form-control" required>
-                                <label for="batch_end_date" class="form-label">Придатний до</label>
-                                <input type="date" name="end" id="batch_end_date" class="form-control" required>
-
-                                <label for="batch_weight" class="form-label">Вага однієї упаковки</label>
-                                <div class="input-group">
-                                    <input type="number" min="0" name="weight" id="batch_weight" class="form-control">
-                                    <span class="input-group-text">грамів</span>
-                                </div>
-
-                                <label for="batch_price" class="form-label">Ціна однієї упаковки</label>
-                                <div class="input-group">
-                                    <input type="number" min="0" name="price" id="batch_price" class="form-control" required>
-                                    <span class="input-group-text">грн</span>
-                                </div>
-                                <label for="batch_size" class="form-label">Розмір партії</label>
-                                <div class="input-group">
-                                    <input type="number" min="0" name="batch_size" id="batch_size" class="form-control" required>
-                                    <span class="input-group-text">упаковок</span>
-                                </div>
-                                <button type="submit" class="btn btn-success">Відправити</button>
-                                <button type="reset" class="btn btn-danger">Скинути форму</button>
-
-
                             </div>
+                            <button type="submit" class="btn btn-success">Відправити</button>
+                            <button type="reset" class="btn btn-danger">Скинути форму</button>
                         </div>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="post-client-form">
-                    <form action="/client" method="post" id="clientForm">
+                <div class="tab-pane fade" id="post-teacher-tab">
+                    <form action="/teacher" method="post" id="teacherForm">
                         <div class="mb-3">
-                            <label class="form-label" for="client_id">Номер клієнта</label>
-                            <input type="number" min="0" class="form-control" name="client_id" id="client_id" disabled>
-                            <span class="form-text">При додаванні нового клієнта це поле рекомендовано залишити порожнім</span>
-
+                            <label class="form-label" for="teacher_id">Номер викладача</label>
+                            <input type="number" min="0" class="form-control" name="id" id="teacher_id" disabled>
+                            <span class="form-text">При додаванні нового викладача це поле рекомендовано залишити порожнім</span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="client_company_name">Назва компанії</label>
-                            <input type="text" name="company" id="client_company_name" class="form-control" maxlength="40" required>
+                            <label class="form-label" for="teacher_last_name">Прізвище викладача</label>
+                            <input type="text" name="last_name" id="teacher_last_name" class="form-control" maxlength="50" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="client_address">Адреса компанії</label>
-                            <input type="text" name="address" id="client_address" class="form-control" maxlength="100">
+                            <label class="form-label" for="teacher_first_name">Ім'я викладача</label>
+                            <input type="text" name="first_name" id="teacher_first_name" class="form-control" maxlength="50" required>
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label" for="client_phone">Контактний телефон компанії</label>
-                            <input type="text" name="phone" id="client_phone" class="form-control" maxlength="17">
+                            <label class="form-label" for="teacher_middle_name">По батькові викладача</label>
+                            <input type="text" name="middle_name" id="teacher_middle_name" class="form-control" maxlength="50" required>
                         </div>
                         <button type="submit" class="btn btn-success">Відправити</button>
                         <button type="reset" class="btn btn-danger">Скинути форму</button>
@@ -307,87 +222,77 @@
 
                     </form>
                 </div>
-                <div class="tab-pane fade" id="post-packing-form">
-                    <form action="/packing" method="post" id="packingForm">
+                <div class="tab-pane fade" id="post-classroom-tab">
+                    <form action="/classroom" method="post" id="classroomForm">
                         <div class="mb-3">
-                            <label class="form-label" for="packing_id">Номер пакування</label>
-                            <input type="number" min="0" class="form-control" name="packing_id" id="packing_id" disabled>
-                            <span class="form-text">При додаванні нового пакування це поле рекомендовано залишити порожнім</span>
-
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="packing_name">Назва типу упаковки</label>
-                            <input type="text" name="packing_name" id="packing_name" class="form-control" maxlength="40" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="packing_amount">Кількість насінин в упаковці</label>
-                            <input type="text" name="amount" id="packing_amount" class="form-control" maxlength="100"
-                                   required>
-                        </div>
-                        <button type="submit" class="btn btn-success">Відправити</button>
-                        <button type="reset" class="btn btn-danger">Скинути форму</button>
-
-
-                    </form>
-                </div>
-                <div class="tab-pane fade" id="post-purchase-form">
-                    <form action="/purchase" method="post" id="purchaseForm">
-                        <div class="mb-3">
-                            <label class="form-label" for="purchase_id">Код покупки</label>
-                            <input type="number" min="0" class="form-control" name="purchase_id" id="purchase_id" disabled>
-                            <span class="form-text">При додаванні нової покупки це поле рекомендовано залишити порожнім</span>
-
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="purchase_client_id">Клієнт</label>
-                            <!--                        <input type="text" class="form-control" id="sort_name" maxlength="40" name="name" required>-->
-                            <select class="form-select" name="client_id" id="purchase_client_id" onclick="loadSelect('client', document.querySelector('#purchase_client_id'), ['id', 'company', 'address'])">
-                                <option value="" id="purchase_client_id_empty" data-purpose="load">
-                                    Click here to load...
-                                </option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="purchase_batch_id">Партія</label>
-                            <select class="form-select" name="batch_id" id="purchase_batch_id" onclick="loadSelect('batch', document.querySelector('#purchase_batch_id'), ['id', 'sort_id', 'packing_date'])">
-                                <option value="" id="purchase_batch_id_empty" data-purpose="load">
-                                    Click here to load...
-                                </option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="purchase_seller_id">Продавець</label>
-                            <select class="form-select" name="seller_id" id="purchase_seller_id" onclick="loadSelect('seller', document.querySelector('#purchase_seller_id'), ['id', 'seller_name'])">
-                                <option value="" id="purchase_seller_id_empty" data-purpose="load">
-                                    Click here to load...
-                                </option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="purchase_buy_date">Дата покупки</label>
-                            <input class="form-control" name="buy_date" id="purchase_buy_date" type="date">
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" name="is_cash" id="purchase_is_cash" class="form-check-input">
-                                <label for="purchase_is_cash" class="form-check-label">Оплата готівкою</label>
-                            </div>
+                            <label class="form-label" for="classroom_id">Номер аудиторії</label>
+                            <input type="number" min="0" class="form-control" name="id" id="classroom_id">
+<!--                            <span class="form-text">При додаванні нового пакування це поле рекомендовано залишити порожнім</span>-->
                         </div>
                         <button type="submit" class="btn btn-success">Відправити</button>
                         <button type="reset" class="btn btn-danger">Скинути форму</button>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="post-seller-form">
-                    <form action="/seller" method="post" id="sellerForm">
+                <div class="tab-pane fade" id="post-student-tab">
+                    <form action="/student" method="post" id="studentForm">
                         <div class="mb-3">
-                            <label class="form-label" for="seller_id">Код продавця</label>
+                            <label class="form-label" for="student_id">Номер залікової книжки</label>
+                            <input type="number" min="0" class="form-control" name="id" id="student_id" disabled>
+                            <span class="form-text">При додаванні нового студента це поле рекомендовано залишити порожнім</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="student_last_name">Прізвище студента</label>
+                            <input type="text" name="last_name" id="student_last_name" class="form-control" maxlength="50" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="student_first_name">Ім'я студента</label>
+                            <input type="text" name="first_name" id="student_first_name" class="form-control" maxlength="50" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="student_middle_name">По батькові студента</label>
+                            <input type="text" name="middle_name" id="student_middle_name" class="form-control" maxlength="50" required>
+                        </div>
+                        <div class="mb-3"><label for="student_group" class="form-label">Група студента</label>
+                            <select name="group" id="student_group" class="form-control">
+                                <option value="" id="group_empty" data-purpose="load">
+                                    Click here to load...
+                                </option>
+                            </select></div>
+                        <button type="submit" class="btn btn-success">Відправити</button>
+                        <button type="reset" class="btn btn-danger">Скинути форму</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="post-schedule-tab">
+                    <form action="/schedule" method="post" id="scheduleForm">
+                        <div class="mb-3">
+                            <label class="form-label" for="seller_id">Код заняття</label>
                             <input type="number" min="0" class="form-control" name="seller_id" id="seller_id" disabled>
-                            <span class="form-text">При додаванні нового продавця це поле рекомендовано залишити порожнім</span>
+                            <span class="form-text">При додаванні нового заняття це поле рекомендовано залишити порожнім</span>
 
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="seller_name">Прізвище продавця</label>
-                            <input type="text" name="seller_name" id="seller_name" class="form-control" maxlength="40" required>
+                            <label class="form-label" for="schedule_time">Час заняття</label>
+                            <select class="form-select" name="time" id="schedule_time">
+                                <option value="" id="schedule_time_empty" data-purpose="load">
+                                    Click here to load...
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="schedule_subject">Освітня компонента</label>
+                            <select class="form-select" name="subject" id="schedule_subject">
+                                <option value="" id="schedule_subject_empty" data-purpose="load">
+                                    Click here to load...
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="schedule_group">Група</label>
+                            <select class="form-select" name="group" id="schedule_group">
+                                <option value="" id="schedule_group_empty" data-purpose="load">
+                                    Click here to load...
+                                </option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-success">Відправити</button>
                         <button type="reset" class="btn btn-danger">Скинути форму</button>

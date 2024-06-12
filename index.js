@@ -3,19 +3,16 @@ import mysql from 'mysql2';
 import fs from "node:fs"
 import path from "node:path";
 import url from "node:url";
-import {SortDto} from "./model/SortDto.js";
-import {ClientDto} from "./model/ClientDto.js";
-import {SellerDto} from "./model/SellerDto.js";
-import {PackingDto} from "./model/PackingDto.js";
-import {NewSortDto} from "./model/newSortDto.js";
-import {BatchDto} from "./model/BatchDto.js";
-import {PurchaseDto} from "./model/PurchaseDto.js";
-import {PaymentDto} from "./model/PaymentDto.js";
 import formidable from "formidable";
 import {firstValues} from "formidable/src/helpers/firstValues.js";
-import {readBooleans} from "formidable/src/helpers/readBooleans.js";
 import {StatusCodes} from 'http-status-codes'
-import * as jose from 'jose'
+import {GroupDto} from "./model/GroupDto.js";
+import {ClassDto} from "./model/ClassDto.js";
+import {ClassTimeDto} from "./model/ClassTimeDto.js";
+import {ClassroomDto} from "./model/ClassroomDto.js";
+import {ScheduleDto} from "./model/ScheduleDto.js";
+import {StudentDto} from "./model/StudentDto.js";
+import {TeacherDto} from "./model/TeacherDto.js";
 
 /**
  * Basic SQL error handler
@@ -37,18 +34,19 @@ const app = express();
 const config = JSON.parse(fs.readFileSync("config.json").toString());
 
 const port = config.port;
-
+const dbName = config.mysql.database;
 const sql = mysql.createConnection({
     host: config.mysql.hostname,
     user: config.mysql.username,
     password: config.mysql.password,
-    database: config.mysql.database
+    database: dbName
 });
 
 /**
  * @param {string} auth
  * @param {express.Response} res
  */
+/*
 const verifyJWT = async (auth, res) => {
     if (!auth) {
         const msg = "Authorization information not specified, please file a bug report"
@@ -89,6 +87,7 @@ const verifyJWT = async (auth, res) => {
         return undefined
     }
 }
+*/
 
 sql.connect((err) => {
     if (err) throw err;
@@ -100,31 +99,49 @@ sql.connect((err) => {
  * @param {express.Response} res
  */
 const handleGet = async (req, res) => {
-    const verifiedJWT = await verifyJWT(req.headers.authorization, res)
-    if (!verifiedJWT) return;
+/*    const verifiedJWT = await verifyJWT(req.headers.authorization, res)
+    if (!verifiedJWT) return;*/
 
     const route = req.route.path.split("/")[1];
     const table = req.url.split('/')[1].toUpperCase();
-    let query = ""
+    let query;
 
-    const column = table.toLowerCase().concat("_id");
+    // const column = "id";
+    // const column = table.toLowerCase().concat("_id");
     let description = [];
     const joinIds = [];
-    await sql.promise().query(`DESCRIBE herb_institute.${table}`).then((out) => {
+    await sql.promise().query(`DESCRIBE ${dbName}.${table}`).then((out) => {
         const rows = out[0]
         rows.forEach((el) => {
-            description.push(el.Field)
+            description.push(`\`${table}\`.\`${el.Field}\``)
             if (el.Field !== `${route}_id` && el.Field.endsWith("_id")) joinIds.push(el.Field)
         })
         console.log(`rows: ${JSON.stringify(rows)}`)
         // console.log(`fields: ${JSON.stringify(fields)}`)
     })
-    console.log(joinIds)
     if (!Object.keys(req.params).length) description = description.filter(item => item !== "picture")
     console.log("DESCRIBE: ", description)
     console.log("TABLE: ", table)
-    query = `SELECT ${[...description]} FROM ${table}`;
-    joinIds.forEach(el => {
+    query = `SELECT ${[...description]} FROM \`${table}\``;
+    console.log("JOIN_ID: ", joinIds)
+    switch (table.toLowerCase()) {
+        case "classes":
+            query = query.replace("`CLASSES`.`teacher`", "CONCAT_WS(\" \", T.last_name, T.first_name, T.middle_name) teacher")
+            query = query.concat(` JOIN \`TEACHER\` T ON T.id = ${table}.teacher`)
+            break;
+        case "student":
+            query = query.replace("`STUDENT`.`group`", "CONCAT_WS(\"-\", G.year, G.name) `group`")
+            query = query.concat(` JOIN \`GROUP\` G ON G.id = ${table}.group`)
+            break;
+        case "schedule":
+            query = query.replace("`SCHEDULE`.`time`", "CONCAT_WS(\", \", T.day, T.class_time) `time`")
+            query = query.concat(` JOIN \`CLASSTIME\` T ON T.id = ${table}.time`)
+            query = query.replace("`SCHEDULE`.`subject`", "C.class_name `subject`")
+            query = query.concat(` JOIN \`CLASSES\` C ON C.id = ${table}.subject`)
+            query = query.replace("`SCHEDULE`.`group`", "CONCAT_WS(\"-\", G.year, G.name) `group`")
+            query = query.concat(` JOIN \`GROUP\` G ON G.id = ${table}.group`)
+    }
+/*    joinIds.forEach(el => {
         switch (el) {
             case "client_id":
                 query = query.replace("client_id", "C.company client_id")
@@ -138,9 +155,17 @@ const handleGet = async (req, res) => {
                 query = query.replace("sort_id", "S.name sort_id");
                 query = query.concat(`\nLEFT JOIN SORT S ON S.sort_id = ${table}.sort_id`)
         }
-    })
-    const dateFields = ["end", "packing_date", "date", "buy_date"]
-    if (req.params.id) query = query.concat(` WHERE ${column} = ${req.params.id}`);
+    })*/
+    // const dateFields = ["end", "packing_date", "date", "buy_date"]
+    if (req.params.id) {
+        query = query.concat(` WHERE \`${table}\`.id = ${req.params.id}`)
+    }
+    if(table.toUpperCase() === "GROUP" && !req.params.id) {
+        query = query.concat(` ORDER BY \`year\`, \`name\``)
+    }
+    if(table.toUpperCase() === "SCHEDULE" && !req.params.id) {
+        query = query.concat(` ORDER BY \`group\`, \`T\`.\`id\``)
+    }
     console.log(query);
     sql.query(query, (err, rows) => {
         if(err) {
@@ -148,44 +173,35 @@ const handleGet = async (req, res) => {
             return;
         }
         const out = [];
-        // console.log(rows)
+        console.log(rows)
 
         switch (table) {
-            case 'SORT':
-                rows.forEach(el => {
-                    const dto = new SortDto(el);
-                    if (dto.picture) {
-                        dto.picture = dto.picture.toString()
-                    }
-                    out.push(dto);
-                });
+            case 'CLASSES':
+                rows.forEach(el => out.push(new ClassDto(el)));
                 break;
-            case 'BATCH':
-                rows.forEach(el => out.push(new BatchDto(el)));
+            case 'CLASSTIME':
+                rows.forEach(el => out.push(new ClassTimeDto(el)));
                 break;
-            case 'CLIENT':
-                rows.forEach(el => out.push(new ClientDto(el)));
+            case 'CLASSROOM':
+                rows.forEach(el => out.push(new ClassroomDto(el)));
                 break;
-            case 'NEW_SORT':
-                rows.forEach(el => out.push(new NewSortDto(el)));
+            case 'GROUP':
+                rows.forEach(el => out.push(new GroupDto(el)));
                 break;
-            case 'PACKING':
-                rows.forEach(el => out.push(new PackingDto(el)));
+            case 'SCHEDULE':
+                rows.forEach(el => out.push(new ScheduleDto(el)));
                 break;
-            case 'PURCHASE':
-                rows.forEach(el => out.push(new PurchaseDto(el)));
+            case 'STUDENT':
+                rows.forEach(el => out.push(new StudentDto(el)));
                 break;
-            case 'SELLER':
-                rows.forEach(el => out.push(new SellerDto(el)));
-                break;
-            case 'PAYMENT':
-                rows.forEach(el => out.push(new PaymentDto(el)));
+            case 'TEACHER':
+                rows.forEach(el => out.push(new TeacherDto(el)));
                 break;
         }
+        console.log(out)
         out.forEach(dto => {
         console.log(dto)
-            // console.log(Object.keys(dto).get("end"))
-            dateFields.forEach(el => {
+            /*dateFields.forEach(el => {
                 if (dto[el]) {
                     dto[el] = Intl.DateTimeFormat("uk-ua", {
                         "day": "numeric",
@@ -193,7 +209,7 @@ const handleGet = async (req, res) => {
                         "year": "numeric"
                     }).format(new Date(dto[el]))
                 }
-            })
+            })*/
         })
 
         res.status(StatusCodes.OK);
@@ -211,19 +227,19 @@ const handleGet = async (req, res) => {
  * @param {Response} res
  */
 const handleDelete = async (req, res) => {
-    const jwt = await verifyJWT(req.headers.authorization, res)
-    console.log(jwt)
-    if (!jwt.payload.roles.includes("administrator")) {
-        res.sendStatus(StatusCodes.FORBIDDEN)
-        return
-    }
+    // const jwt = await verifyJWT(req.headers.authorization, res)
+    // console.log(jwt)
+    // if (!jwt.payload.roles.includes("administrator")) {
+    //     res.sendStatus(StatusCodes.FORBIDDEN)
+    //     return
+    // }
 
     const table = req.url.split('/')[1].toUpperCase();
     if (!req.params.id) {
         res.sendStatus(StatusCodes.NOT_FOUND);
         console.error("Don't know what to delete")
     } else {
-        let query = `DELETE FROM ${table} WHERE ${table}_id = ${req.params.id}`;
+        let query = `DELETE FROM \`${table}\` WHERE \`${table}_id\` = \`${req.params.id}\``;
         sql.query(query, (err) => {
             if (err) {
                 handleSqlError(err, res)
@@ -242,8 +258,8 @@ const handleDelete = async (req, res) => {
  * @param {string} route
  */
 const handlePost = async (req, res, route) => {
-    const verifiedJWT = await verifyJWT(req.headers.authorization, res)
-    if (!verifiedJWT) return;
+    // const verifiedJWT = await verifyJWT(req.headers.authorization, res)
+    // if (!verifiedJWT) return;
     const form = formidable({
         allowEmptyFiles: true,
         minFileSize: 0
@@ -257,49 +273,49 @@ const handlePost = async (req, res, route) => {
 
         const fields = firstValues(form, fieldsMultiple)
 
-        // res.json({fields, file})
-        const checkboxInputs = ['adaptation', 'frost', 'approved', 'is_cash']
-        const parsedFields = readBooleans(fields, checkboxInputs)
-        console.log("parsedFields: ", parsedFields)
         console.log("fields: ", fields)
+        Object.keys(fields).forEach(key => {
+            console.log(fields[key]);
+            console.log(key);
+            if (typeof fields[key] === "string") {
+                fields[key] = addslashes(fields[key])
+            }
+        })
         console.log("files: ", files)
 
         let dto;
         switch (route.toUpperCase()) {
-            case 'SORT':
-                dto = new SortDto(parsedFields);
+            case 'CLASSES':
+                dto = new ClassDto(fields);
                 break;
-            case 'BATCH':
-                dto = new BatchDto(parsedFields);
+            case 'CLASSTIME':
+                dto = new ClassTimeDto(fields);
                 break;
-            case 'CLIENT':
-                dto = new ClientDto(parsedFields);
+            case 'CLASSROOM':
+                dto = new ClassroomDto(fields);
                 break;
-            case 'NEW_SORT':
-                dto = new NewSortDto(parsedFields);
+            case 'GROUP':
+                dto = new GroupDto(fields);
                 break;
-            case 'PACKING':
-                dto = new PackingDto(parsedFields);
+            case 'SCHEDULE':
+                dto = new ScheduleDto(fields);
                 break;
-            case 'PURCHASE':
-                dto = new PurchaseDto(parsedFields);
+            case 'STUDENT':
+                dto = new StudentDto(fields);
                 break;
-            case 'SELLER':
-                dto = new SellerDto(parsedFields);
-                break;
-            case 'PAYMENT':
-                dto = new PaymentDto(parsedFields);
+            case 'TEACHER':
+                dto = new TeacherDto(fields);
                 break;
             default:
                 // Default case if route doesn't match any known DTO
                 res.status(StatusCodes.BAD_REQUEST).send('Invalid route');
                 return;
         }
-        if (files.picture) {
+/*        if (files.picture) {
             const file = fs.readFileSync(files.picture[0].filepath)
             dto.picture = file.toString('base64')
-        }
-        const expectedInts = ['id', 'year', 'period'];
+        }*/
+        const expectedInts = ['id', 'day', 'class_time', 'year', 'time', 'group'];
 
         const keys = Object.keys(dto);
         let values = Object.values(dto);
@@ -335,11 +351,13 @@ const handlePost = async (req, res, route) => {
         let query_fields = "";
         let query_values = "";
         for (const key in queryInput) {
-            if (key === "id") {
+            /*if (key === "id") {
                 query_fields = query_fields.concat(`\`${route.toLowerCase()}_${key}\`, `)
             } else {
                 query_fields = query_fields.concat(`\`${key}\`, `)
-            }
+            }*/
+            query_fields = query_fields.concat(`\`${key}\`, `)
+
             const val = queryInput[key]
             if (typeof val === 'string') {
                 query_values = query_values.concat(`'${queryInput[key]}', `)
@@ -354,7 +372,7 @@ const handlePost = async (req, res, route) => {
         query_values = query_values.split(", ")
         query_values.pop()
         query_values.join(", ")
-        const query = `INSERT INTO ${route.toUpperCase()} (${query_fields}) VALUES (${query_values});`
+        const query = `INSERT INTO \`${route.toUpperCase()}\` (${query_fields}) VALUES (${query_values});`
         console.log(query)
         if (query) {
             sql.query(query, (err, result) => {
@@ -377,7 +395,7 @@ const handlePost = async (req, res, route) => {
 };
 app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
 
-const standard_routes = ['batch', 'client', 'new_sort', 'packing', 'purchase', 'seller', 'sort']
+const standard_routes = ['classes', 'classtime', 'classroom', 'group', 'schedule', 'student', 'teacher']
 
 standard_routes.forEach((route) => {
     app.get(`/${route}`, (req, res) => handleGet(req, res))
@@ -388,14 +406,12 @@ standard_routes.forEach((route) => {
 
 })
 
-app.get(`/payment`, (req, res) => handleGet(req, res))
-    .post(`/payment`, (req, res) => handlePost(req, res, "payment"))
-
-app.get(`/payment/:purchase_id/:batch_id`, (req, res) => handleGet(req, res))
-    .delete(`/payment/:purchase_id/:batch_id`, (req, res) => handleDelete(req, res));
-
 app.use(`/getconfig`, express.static("./static/get_fields.json"))
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+function addslashes( str ) {
+    return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+}

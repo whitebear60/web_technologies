@@ -1,161 +1,98 @@
 {
-  "sort": {
+  "classes": {
     "id": {
-      "field": "Код сорту",
+      "field": "Код освітньої компоненти",
+      "type": "number"
+    },
+    "class_name": {
+      "field": "Назва освітньої компоненти",
+      "type": "string"
+    },
+    "classroom": {
+      "field": "Аудиторія",
+      "type": "string"
+    },
+    "teacher": {
+      "field": "Викладач",
+      "type": "string"
+    }
+  },
+  "classroom": {
+    "id": {
+      "field": "Номер аудиторії",
+      "type": "string"
+    }
+  },
+  "group": {
+    "id": {
+      "field": "Код групи",
       "type": "number"
     },
     "name": {
-      "field": "Назва сорту",
+      "field": "Шифр групи",
       "type": "string"
     },
     "year": {
-      "field": "Рік виведення",
-      "type": "number"
-    },
-    "adaptation": {
-      "field": "Адаптація до місцевих умов",
-      "type": "boolean"
-    },
-    "frost": {
-      "field": "Морозостійкість",
-      "type": "boolean"
-    },
-    "description": {
-      "field": "Опис сорту",
-      "type": "text"
-    },
-    "technology": {
-      "field": "Спосіб посадки",
-      "type": "text"
-    },
-    "picture": {
-      "field": "Зображення",
-      "type": "picture"
-    },
-    "approved": {
-      "field": "Схвалено інспекцією",
-      "type": "boolean"
-    },
-    "period": {
-      "field": "Час дозрівання",
-      "type": "enum",
-      "values": ["Ранній", "Середній", "Пізній"]
-    }
-  },
-  "new_sort": {
-    "id": {
-      "field": "Код сорту",
-      "type": "number"
-    },
-    "date": {
-      "field": "Дата виведення",
-      "type": "date"
-    },
-    "comment": {
-      "field": "Коментар до тестування",
-      "type": "comment"
-    }
-  },
-  "batch": {
-    "id": {
-      "field": "Номер партії",
-      "type": "number"
-    },
-    "sort_id": {
-      "field": "Сорт",
-      "type": "number"
-    },
-    "end": {
-      "field": "Термін придатності",
-      "type": "date"
-    },
-    "packing_id": {
-      "field": "Код пакування",
-      "type": "number"
-    },
-    "packing_date": {
-      "field": "Дата фасування",
-      "type": "date"
-    },
-    "weight": {
-      "field": "Вага, г",
-      "type": "number"
-    },
-    "price": {
-      "field": "Ціна за одиницю, грн",
-      "type": "number"
-    },
-    "batch_size": {
-      "field": "Розмір партії, шт.",
+      "field": "Поточний курс",
       "type": "number"
     }
   },
-  "client": {
+  "schedule": {
     "id": {
-      "field": "Код клієнта",
+      "field": "Код заняття",
       "type": "number"
     },
-    "company": {
-      "field": "Назва компанії",
+    "time": {
+      "field": "Час заняття",
       "type": "string"
     },
-    "address": {
-      "field": "Адреса компанії",
+    "subject": {
+      "field": "Назва освітньої компоненти",
       "type": "string"
     },
-    "phone": {
-      "field": "Контактний телефон",
+    "group": {
+      "field": "Шифр групи",
       "type": "string"
     }
   },
-  "packing": {
+  "student": {
     "id": {
-      "field": "Код пакування",
+      "field": "Код студента",
       "type": "number"
     },
-    "packing_name": {
-      "field": "Назва типу пакування",
+    "last_name": {
+      "field": "Прізвище",
       "type": "string"
     },
-    "amount": {
-      "field": "Кількість насінин в упаковці",
+    "first_name": {
+      "field": "Ім'я",
+      "type": "string"
+    },
+    "middle_name": {
+      "field": "По батькові",
+      "type": "string"
+    },
+    "group": {
+      "field": "Група",
       "type": "number"
     }
   },
-  "seller": {
+  "teacher": {
     "id": {
-      "field": "Код продавця",
+      "field": "Код викладача",
       "type": "number"
     },
-    "seller_name": {
-      "field": "Прізвище продавця",
-      "type": "string"
-    }
+    "last_name": {
+    "field": "Прізвище",
+    "type": "string"
   },
-  "purchase": {
-    "id": {
-      "field": "Код покупки",
-      "type": "number"
+  "first_name": {
+      "field": "Ім'я",
+      "type": "string"
     },
-    "client_id": {
-      "field": "Клієнт",
-      "type": "number"
-    },
-    "batch_id": {
-      "field": "Номер партії",
-      "type": "number"
-    },
-    "buy_date": {
-      "field": "Дата покупки",
-      "type": "date"
-    },
-    "is_cash": {
-      "field": "Оплата готівкою",
-      "type": "boolean"
-    },
-    "seller_id": {
-      "field": "Продавець",
-      "type": "number"
+    "middle_name": {
+      "field": "По батькові",
+      "type": "string"
     }
   }
 }

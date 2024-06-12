@@ -225,7 +225,7 @@ function fileToBase64(file, callback) {
     reader.readAsDataURL(file);
 }
 
-const uploadField = document.getElementById("sort_picture");
+/*const uploadField = document.getElementById("sort_picture");
 
 uploadField.onchange = function() {
     if(this.files[0].size > 1_048_576) {
@@ -238,15 +238,16 @@ uploadField.onchange = function() {
         })
     }
 
-};
+};*/
 
-document.querySelector("#sort_new").addEventListener("change", () => {
+/*document.querySelector("#sort_new").addEventListener("change", () => {
     document.querySelector("#new_sort_inputs").classList.toggle("d-none")
     document.querySelector("#new_sort_selection_date").value = ""
     document.querySelector("#new_sort_comment").value = ""
-})
+})*/
 
-const loadSelect = (route, el, fields) => {
+function loadSelect(route, el, fields) {
+    console.log(el)
     if (el.children[0].dataset.purpose === "load") {
         el.removeChild(el.children[0]);
         const xhr = new XMLHttpRequest();
@@ -262,8 +263,8 @@ const loadSelect = (route, el, fields) => {
                     fields.forEach(f => {
                         caption.push(sort[f])
                     })
-                    option.innerHTML = caption.join(' | ')
-                    option.value = sort[fields[0]]
+                    option.innerHTML = caption.join(' ')
+                    option.value = sort.id
                     el.appendChild(option)
                 })
             }
@@ -307,16 +308,58 @@ viewAllBtns.forEach(button => {
                         })
                         table.appendChild(thead)
                         const tbody = document.createElement("tbody")
+                        const searchBoxes = document.createElement("tr");
+
+                        function tableSearch(table, input, column) {
+                            // Declare variables
+                            let filter, tr, td, i, txtValue;
+                            filter = input.value.toUpperCase();
+                            tr = table.querySelectorAll("tr.tr_searchable");
+                            console.log(tr)
+                            // Loop through all table rows, and hide those who don't match the search query
+                            for (i = 0; i < tr.length; i++) {
+                                td = tr[i].getElementsByTagName("td")[column];
+                                if (td) {
+                                    txtValue = td.textContent || td.innerText;
+                                    console.log(`filter: ${filter}, txtValue: ${txtValue}, ${txtValue.toUpperCase()}`)
+                                    if (txtValue.toUpperCase().startsWith(filter)) {
+                                        console.log("-1")
+                                        console.log(td)
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                        }
+
+                        for (let i = 0; i < Object.keys(config).length; i++){
+                            const entry = Object.keys(config)[i];
+                            const td = document.createElement("td")
+                            const input = document.createElement("input");
+                            input.placeholder = `Шукати за ${config[entry].field}...`
+                            input.classList.add("form-control")
+                            input.style.borderWidth = 'thin'
+                            input.id = `modalTableSearch${i}`
+                            input.addEventListener("keyup", () => tableSearch(table, input, i))
+                            td.appendChild(input);
+                            searchBoxes.appendChild(td);
+                        }
+                        table.appendChild(searchBoxes);
                         values.forEach(entry => {
                             console.log(entry)
                             const tr = document.createElement("tr")
+                            tr.classList.add("tr_searchable")
                             Object.values(entry).forEach((val, index) => {
                                 let td;
-                                if (index === 0) {
+                                /*if (index === 0) {
                                     td = document.createElement("th")
                                 } else {
                                     td = document.createElement("td")
-                                }
+                                }*/
+                                td = document.createElement("td")
+
                                 const type = config[Object.keys(entry)[index]].type
                                 switch (type.toLowerCase()) {
                                     case "boolean":
@@ -370,4 +413,44 @@ viewAllBtns.forEach(button => {
         })
         xhr.send();
     })
+})
+
+const teacherSelect = document.querySelector("select#class_teacher")
+
+teacherSelect.addEventListener("click", (e) => {
+    console.log(e)
+    console.log(e.currentTarget)
+    loadSelect('teacher', e.currentTarget, ['id', 'first_name', 'last_name'])
+})
+
+const selectElements = [
+    {
+        "element": "select#class_classroom",
+        "fields": ['id'],
+        "route": "classroom"
+    },
+    {
+        "element": "select#student_group",
+        "fields": ['year', 'name'],
+        "route": "group"
+    },
+    {
+        "element": "select#schedule_time",
+        "fields": ['day', 'class_time'],
+        "route": "classtime"
+    },
+    {
+        "element": "select#schedule_subject",
+        "fields": ['class_name'],
+        "route": "classes"
+    },
+    {
+        "element": "select#schedule_group",
+        "fields": ['year', 'name'],
+        "route": "group"
+    },
+
+]
+selectElements.forEach(el => {
+    document.querySelector(el.element).addEventListener("click", (e) => loadSelect(el.route, e.currentTarget, el.fields))
 })
