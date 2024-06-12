@@ -315,18 +315,21 @@ const handlePost = async (req, res, route) => {
             const file = fs.readFileSync(files.picture[0].filepath)
             dto.picture = file.toString('base64')
         }*/
-        const expectedInts = ['id', 'day', 'class_time', 'year', 'time', 'group'];
 
-        const keys = Object.keys(dto);
-        let values = Object.values(dto);
-        console.log("keys: ", keys)
-        console.log(dto)
-        console.log("values: ", values)
-        for (let i = 0; i < keys.length; i++) {
-            if (expectedInts.indexOf(keys[i]) !== -1) {
-                Object.defineProperty(dto, keys[i], {
-                    "value": parseInt(values[i])
-                })
+            const expectedInts = ['id', 'day', 'class_time', 'year', 'time', 'group'];
+
+            const keys = Object.keys(dto);
+            let values = Object.values(dto);
+            console.log("keys: ", keys)
+            console.log(dto)
+            console.log("values: ", values)
+        if (route !== "classroom") {
+            for (let i = 0; i < keys.length; i++) {
+                if (expectedInts.indexOf(keys[i]) !== -1) {
+                    Object.defineProperty(dto, keys[i], {
+                        "value": parseInt(values[i])
+                    })
+                }
             }
         }
 
