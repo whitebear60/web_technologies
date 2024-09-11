@@ -7,7 +7,7 @@ import {SortDto} from "./model/SortDto.js";
 import {ClientDto} from "./model/ClientDto.js";
 import {SellerDto} from "./model/SellerDto.js";
 import {PackingDto} from "./model/PackingDto.js";
-import {NewSortDto} from "./model/newSortDto.js";
+import {NewSortDto} from "./model/NewSortDto.js";
 import {BatchDto} from "./model/BatchDto.js";
 import {PurchaseDto} from "./model/PurchaseDto.js";
 import {PaymentDto} from "./model/PaymentDto.js";
