@@ -3,3 +3,4 @@ dist/
 config.json
 http-client.env.json
 .*DS_Store
+token.txt
