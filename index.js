@@ -405,7 +405,6 @@ app.get(`/`, async (req, res) => {
 
 const parseCookies = (cookies) => {
     console.log(cookies)
-    const cookieObj = {};
     if (cookies) {
         cookies = cookies.split("; ")
         console.log(cookies)
@@ -413,7 +412,6 @@ const parseCookies = (cookies) => {
         for (let i = 0; i < cookies.length; i++){
             const cookie = cookies[i];
             cookies[i] = cookie.split("=");
-            // Object.defineProperty(cookieObj, cookie.split("=")[0], cookie.split("=")[1]);
         }
         console.log("Cookies: ", cookies)
     }

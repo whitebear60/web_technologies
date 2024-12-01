@@ -3,7 +3,6 @@ const toast = document.querySelector("#notification")
 
 /**
  * @param {string} msg
- * @param {boolean} success
  */
 const showToast = (msg) => {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
