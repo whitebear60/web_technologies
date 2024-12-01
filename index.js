@@ -16,6 +16,9 @@ import {firstValues} from "formidable/src/helpers/firstValues.js";
 import {readBooleans} from "formidable/src/helpers/readBooleans.js";
 import {StatusCodes} from 'http-status-codes'
 import * as jose from 'jose'
+import http from "http";
+
+
 
 /**
  * Basic SQL error handler
@@ -37,6 +40,8 @@ const app = express();
 const config = JSON.parse(fs.readFileSync("config.json").toString());
 
 const port = config.port;
+const authServerIp = "localhost";
+const authServerPort = 8890
 
 const sql = mysql.createConnection({
     host: config.mysql.hostname,
@@ -44,6 +49,8 @@ const sql = mysql.createConnection({
     password: config.mysql.password,
     database: config.mysql.database
 });
+
+const staticDir = path.join(currDir(import.meta.url), 'static');
 
 /**
  * @param {string} auth
@@ -64,7 +71,7 @@ const verifyJWT = async (auth, res) => {
     }
     const jwt = auth.split(" ")[1]
     const secret = new TextEncoder().encode(
-        atob("c2VjcmV0X3Bhc3N3b3JkX2Zvcl9kaWdpdGFsX3NpZ25hdHVyZV9vZl90aGVfdG9rZW5fYnlfc3VuYnVyc3Q0"),
+        atob(fs.readFileSync("token.txt").toString()),
     )
     try {
         const msg = await jose.jwtVerify(jwt, secret)
@@ -84,7 +91,7 @@ const verifyJWT = async (auth, res) => {
                 message = "This token is invalid"
                 console.log(err)
         }
-        res.status(StatusCodes.UNAUTHORIZED).send(message)
+        res.status(StatusCodes.UNAUTHORIZED).send(message   )
         console.log("Unauthorized")
         return undefined
     }
@@ -100,7 +107,8 @@ sql.connect((err) => {
  * @param {express.Response} res
  */
 const handleGet = async (req, res) => {
-    const verifiedJWT = await verifyJWT(req.headers.authorization, res)
+    const cookies = parseCookies(req.headers.cookie);
+    const verifiedJWT = await verifyJWT(cookies.Authorization, res)
     if (!verifiedJWT) return;
 
     const route = req.route.path.split("/")[1];
@@ -211,7 +219,8 @@ const handleGet = async (req, res) => {
  * @param {Response} res
  */
 const handleDelete = async (req, res) => {
-    const jwt = await verifyJWT(req.headers.authorization, res)
+    const cookies = parseCookies(req.headers.cookie);
+    const jwt = await verifyJWT(cookies.Authorization, res)
     console.log(jwt)
     if (!jwt.payload.roles.includes("administrator")) {
         res.sendStatus(StatusCodes.FORBIDDEN)
@@ -242,7 +251,8 @@ const handleDelete = async (req, res) => {
  * @param {string} route
  */
 const handlePost = async (req, res, route) => {
-    const verifiedJWT = await verifyJWT(req.headers.authorization, res)
+    const cookies = parseCookies(req.headers.cookie);
+    const verifiedJWT = await verifyJWT(cookies.Authorization, res)
     if (!verifiedJWT) return;
     const form = formidable({
         allowEmptyFiles: true,
@@ -375,7 +385,75 @@ const handlePost = async (req, res, route) => {
         }
     });
 };
-app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
+// app.use('/', express.static(path.join(currDir(import.meta.url), 'static')))
+app.get(`/`, async (req, res) => {
+    let cookies = parseCookies(req.headers.cookie);
+    if (cookies && cookies.Authorization && cookies.Authorization.startsWith("Bearer")) {
+        const verifiedJWT = await verifyJWT(cookies.Authorization, res);
+        if(!verifiedJWT) return;
+        res.sendFile("index.html", {root: path.resolve(staticDir)}, (err) => {
+            console.log(path.resolve(staticDir))
+            res.end();
+
+            if (err) throw err;
+        });
+        // res.
+    } else {
+        return res.status(StatusCodes.UNAUTHORIZED).redirect("/login");
+    }
+})
+
+const parseCookies = (cookies) => {
+    console.log(cookies)
+    const cookieObj = {};
+    if (cookies) {
+        cookies = cookies.split("; ")
+        console.log(cookies)
+
+        for (let i = 0; i < cookies.length; i++){
+            const cookie = cookies[i];
+            cookies[i] = cookie.split("=");
+            // Object.defineProperty(cookieObj, cookie.split("=")[0], cookie.split("=")[1]);
+        }
+        console.log("Cookies: ", cookies)
+    }
+    if (cookies) return Object.fromEntries(cookies);
+}
+
+app.get(`/login`, async (req, res) => {
+    const cookies = parseCookies(req.headers.cookie);
+    if (cookies && cookies.Authorization && cookies.Authorization.startsWith("Bearer")) {
+        const verifiedJWT = await verifyJWT(cookies.Authorization, res);
+        console.log("verifiedJWT", verifiedJWT);
+        // if(!verifiedJWT) return;
+        /*res.sendFile("index.html", {root: staticDir}, (err) => {
+            res.end();
+
+            if (err) throw err;
+        });*/
+        res.redirect("/");
+    } else {
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8890");
+        res.sendFile("login.html", {root: staticDir}, (err) => {
+            res.end();
+            console.log("err: ", err)
+            // console.log(res)
+        });
+    }
+    // console.log(req.headers.cookie)
+    // if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    //     const verifiedJWT = await verifyJWT(req.headers.authorization, res);
+    //     if(!verifiedJWT) return;
+    //     res.sendFile("index.html", {root: path.resolve(__dirname)}, (err) => {
+    //         res.end();
+    //
+    //         if (err) throw err;
+    //     });
+    //     // res.
+    // } else {
+    //     return res.status(StatusCodes.BAD_REQUEST).setHeader("Set-Cookie", "auth=jwt").send()
+    // }
+})
 
 const standard_routes = ['batch', 'client', 'new_sort', 'packing', 'purchase', 'seller', 'sort']
 
@@ -395,7 +473,52 @@ app.get(`/payment/:purchase_id/:batch_id`, (req, res) => handleGet(req, res))
     .delete(`/payment/:purchase_id/:batch_id`, (req, res) => handleDelete(req, res));
 
 app.use(`/getconfig`, express.static("./static/get_fields.json"))
+app.use(`/style.css`, express.static("./static/style.css"))
+app.use(`/index.js`, express.static("./static/index.js"))
+app.use(`/login.js`, express.static("./static/login.js"))
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
+})
+
+app.post(`/auth`, (req, res) => {
+    // res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080").redirect(307, `${authServerIp}/auth`);
+    const loginReq = http.request({
+        host: authServerIp,
+        port: authServerPort,
+        method: "POST",
+        path: "/auth"
+    }, res1 => {
+        res1.on("data", data => {
+            console.log(data.toString())
+            if (res1.statusCode === 200) {
+                res.setHeader("Set-Cookie", `Authorization=Bearer ${data}`);
+            }
+            res.status(res1.statusCode);
+            res.send(data.toString())
+        })
+    });
+    loginReq.setHeader("Authorization", req.headers.authorization);
+    loginReq.end();
+})
+app.post(`/register`, (req, res) => {
+    console.log(req.headers)
+    const regReq = http.request({
+        host: authServerIp,
+        port: authServerPort,
+        method: "POST",
+        path: "/register"
+    }, res1 => {
+        res1.on("data", data => {
+            console.log(data.toString())
+            if (res1.statusCode === 200) {
+                res.setHeader("Set-Cookie", `Authorization=Bearer ${data}`);
+            }
+            res.status(res1.statusCode);
+            res.send(data.toString())
+        })
+    });
+    regReq.setHeader("Authorization", req.headers.authorization);
+    regReq.end();
+
 })
