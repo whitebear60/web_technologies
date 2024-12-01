@@ -34,6 +34,10 @@
         <li class="nav-item">
             <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#post-tabs">Додати у БД</button>
         </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#delete-tabs">Видалити з БД</button>
+<!--            <button class="nav-link" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#delete-tabs">Видалити з БД</button>-->
+        </li>
     </ul>
     <div class="tab-content">
         <div class="container tab-pane fade show active" id="get-tabs">
@@ -394,6 +398,100 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="container tab-pane fade" id="delete-tabs">
+            <ul class="nav nav-pills d-flex align-items-center justify-content-center">
+                <li class="nav-item">
+                    <button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-sort-tab">Сорт</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-new-sort-tab">Новий сорт</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-batch-tab">Партія</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-client-tab">Клієнт</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-packing-tab">Пакування</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-purchase-tab">Покупка</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" type="button" role="tab" data-bs-toggle="tab" data-bs-target="#delete-seller-tab">Продавець</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="delete-sort-tab">
+                    <form action="/sort" method="delete" id="deleteSortForm">
+                        <div class="mb-3"><label for="delete_sort_id" class="form-label">Код сорту</label>
+                            <input type="text" name="id" id="delete_sort_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-batch-tab">
+                    <form action="/batch" method="delete" id="deleteBatch">
+                        <div class="mb-3"><label for="delete_batch_id" class="form-label">Номер партії</label>
+                            <input type="text" name="id" id="delete_batch_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-client-tab">
+                    <form action="/client" method="delete" id="deleteClient">
+                        <div class="mb-3"><label for="delete_client_id" class="form-label">Код клієнта</label>
+                            <input type="text" name="id" id="delete_client_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-packing-tab">
+                    <form action="/packing" method="delete" id="deletePacking">
+                        <div class="mb-3"><label for="delete_packing_id" class="form-label">Код пакування</label>
+                            <input type="text" name="id" id="delete_packing_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-purchase-tab">
+                    <form action="/purchase" method="get" id="deletePurchase">
+                        <div class="mb-3"><label for="delete_purchase_id" class="form-label">Код покупки</label>
+                            <input type="text" name="id" id="delete_purchase_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-seller-tab">
+                    <form action="/seller" method="delete" id="deleteSeller">
+                        <div class="mb-3"><label for="delete_seller_id" class="form-label">Код продавця</label>
+                            <input type="text" name="id" id="delete_seller_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="delete-new-sort-tab">
+                    <form action="/new_sort" method="delete" id="deleteNewSort">
+                        <div class="mb-3"><label for="delete_new_sort_id" class="form-label">Код сорту</label>
+                            <input type="text" name="id" id="delete_new_sort_id" class="form-control"></div>
+                        <button class="btn btn-danger" type="submit">Видалити</button>
+                        <!--                            <button class="btn btn-primary view-all" data-bs-toggle="modal" data-bs-target="#table-modal" type="reset">Переглянути всі</button>-->
+                    </form>
+                </div>
+            </div>
+            <!--                <div class="row fade show" id="display-card">-->
+            <!--                    &lt;!&ndash;        <div class="card">123</div>&ndash;&gt;-->
+            <!--                </div>-->
+
+            <!--    <li class="nav-item">Сорт</li>-->
+            <!--    <li class="nav-item">Партія</li>-->
+            <!--    <li class="nav-item">Клієнт</li>-->
+            <!--    <li class="nav-item">Пакування</li>-->
+            <!--    <li class="nav-item">Покупка</li>-->
+            <!--    <li class="nav-item">Продавець</li>-->
         </div>
     </div>
 </div>

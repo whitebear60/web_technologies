@@ -178,20 +178,36 @@ const getConfig = (callbackFn) => {
 }
 
 const getForm = document.querySelectorAll("form[method=get]")
-getForm.forEach(form => form.addEventListener("submit", e => {
+const deleteForm = document.querySelectorAll("form[method=delete]")
+const listen = e => {
+    const form = e.target
     e.preventDefault()
     const fd = new FormData(form);
     const id = fd.get("id")
     if(id) {
         const action = form.getAttribute("action").slice(1)
+        const method = form.getAttribute("method")
         const xhr = new XMLHttpRequest();
-        xhr.open("get", `/${action}/${id}`)
+        console.log(method)
+        xhr.open(`${method}`, `/${action}/${id}`)
         xhr.responseType = "json"
         xhr.addEventListener("readystatechange", () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 console.log(xhr.status)
-                if (xhr.status !== 200) {
-                    showToast(`Обʼєкт не знайдено (${xhr.status})`, false);
+                switch (xhr.status) {
+                    case 200:
+                        break;
+                    case 404:
+                        showToast(`Обʼєкт не знайдено (${xhr.status})`, false);
+                        break;
+                    case 403:
+                        showToast(`У вас недостатньо прав для виконання цієї операції (${xhr.status})`, false);
+                        break;
+                    case 500:
+                        showToast(`Помилка сервера (${xhr.status})`, false);
+                        break;
+                    default:
+                        showToast(`Помилка додатку (${xhr.status})`, false);
                 }
                 const fields = {}
                 getConfig((value) => {
@@ -203,7 +219,9 @@ getForm.forEach(form => form.addEventListener("submit", e => {
         })
         xhr.send()
     }
-}))
+}
+getForm.forEach(form => form.addEventListener("submit", (e) => listen(e)))
+deleteForm.forEach(form => form.addEventListener("submit", (e) => listen(e)))
 
 // Function to convert file to Base64
 function fileToBase64(file, callback) {
