@@ -196,6 +196,7 @@ const listen = e => {
                 console.log(xhr.status)
                 switch (xhr.status) {
                     case 200:
+                        if (method === "delete") showToast(`Запис видалено успішно`, true)
                         break;
                     case 404:
                         showToast(`Обʼєкт не знайдено (${xhr.status})`, false);
@@ -209,11 +210,13 @@ const listen = e => {
                     default:
                         showToast(`Помилка додатку (${xhr.status})`, false);
                 }
-                const fields = {}
-                getConfig((value) => {
-                    Object.assign(fields, value[action])
-                    displayEntry(xhr.response, fields)
-                })
+                if (method === "get") {
+                    const fields = {}
+                    getConfig((value) => {
+                        Object.assign(fields, value[action])
+                        displayEntry(xhr.response, fields)
+                    })
+                }
 
             }
         })
